@@ -1,0 +1,68 @@
+#radio{
+    opacity:.85;
+    filter:alpha(opacity=85);
+    filter: “alpha(opacity=85)”;   
+}
+
+#background{
+    width:758px;;
+    height:140px;
+}
+
+div.episode{
+    width:758px;
+    height:75px;
+    background-color:rgba(255,255,0,0.2);
+    border-bottom-style:solid;
+    border-bottom-color:black;
+    border-width:1px;
+}
+span.epIMG{
+    height:75px;
+    width:100px;
+    float:left;
+}
+span.epIMG img{
+    height:65px;
+    width:90px;
+    margin-left:5px;
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+}
+span.epName{
+    height:55px;
+    width:380px;
+    display:table;
+    padding:10px;
+    float:left;
+}
+span.epName p{
+    display:table-row;
+    vertical-align:middle;
+}
+p.air_date{
+    font-size:small;    
+}
+span.epDownload{
+    height:50px;
+    width:50px;
+    margin-left: 160px;
+}
+span.epDownload img{
+    height:40px;
+    width:40px;
+    margin:5px;
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+}
+div#episodes{
+    height:260px;
+    overflow-y:scroll;
+}
+div.pbSearch{
+    width:758px;
+    height:0;
+}
+         

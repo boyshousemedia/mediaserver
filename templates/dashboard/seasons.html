@@ -1,0 +1,87 @@
+{% load staticfiles %}
+
+<link href="{% static "css/jquery-ui.css" %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static "css/seasons.css" %}" type="text/css" />
+<script src="{% static "js/jquery-ui-1.9.2.custom.js" %}"></script>
+
+<form>
+    <div id="background" style="background-image:url('{{show.banner}}');">
+    <div id="radio">
+    {% for i in num_seasons %}
+        {% if i == season %}
+        <input type="radio" id="radio{{i}}" name="radio" checked="checked" class="seasonButton defaultSeason"/><label for="radio{{i}}">Season {{i}}</label>
+        {% else %}
+        <input type="radio" id="radio{{i}}" name="radio" class="seasonButton"/><label for="radio{{i}}">Season {{i}}</label>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div id="showSearch">
+        <table>
+        <tr>
+        <td style="color:white;">Search Template:<td> 
+        <td><input type="text" size=12 value="{{show.search}}" autocomplete="on" title="This is the template for how each episode constructs searches.
+Example, for {{show.name}} season {{season}} episode 1:
+    {{show.name}} S{0s}E{0e} -> {{show.name}} S05E01
+
+    - {s} = 1-digit season number
+    - {e} = 1-digit episode number
+    - {0s} = 2-digit season number
+    - {0e} = 2-digit episode number
+    - {n} = episode name
+    - {a} = Adventure Time style episode number (i.e. 101a, 101b)
+    
+Press enter to save."></td>
+        <td><img src="{% static "img/save.png" %}"></td>
+        </tr>
+        </table>
+    </div>
+    </div>
+</form>
+<div id="episodes"/>
+</div>
+<div id="dummy">
+{% for ep in episodes %}
+{% if ep.number == 1 %}
+</div>
+<div id="season{{ep.season}}">
+{% endif %}
+<div class="episode" id="{{ ep.id }}" title="{{ ep.overview }}">
+    <table>
+    <tr>
+    <td>
+    <span class="epIMG">
+        {% if ep.image == "http://www.thetvdb.com/banners/" %}
+        <img src="{% static "img/not_available.jpg" %}">
+        {% else %}
+        <img src="{{ ep.image }}">
+        {% endif %}
+    </span>
+    </td>
+    <td>
+    <span class="epName">
+        <p>S{{ep.season}}E{{ep.number}} - {{ ep.name }}</p>
+
+        {% if ep.air_date == None %}
+        <p class="air_date">Airs: N/A</p>
+        {% else %}
+        <p class="air_date">Airs: {{ep.air_date}}</p>
+        {% endif %}
+    </span>
+    </td>
+    <td>
+    <span class="epDownload">
+        {% if ep.path == "" %}
+        <a style="cursor:pointer;">
+            <img src="{% static "img/the_pirate_bay_logo.jpg" %}">
+        </a>
+        {% else %}
+        <img src="{% static "img/Checkmark.png" %}">
+        {% endif %}
+    </span>
+    </td>
+    </tr>
+    </table>
+</div>
+<div class="pbSearch" id="p{{ ep.id }}"></div>
+{% endfor %}
+</div>

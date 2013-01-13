@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<head>
+    <link rel="stylesheet" href="{% static "css/shows.css" %}" type="text/css" />
+    <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/shows.js" %}"></script>
+</head>
+<div id="shows_panel">
+    <div>Shows
+        <span id="img">
+            <a>
+                <img id="searchToggle" align="right" src="{% static "img/green_plus_add.png" %}"  width="15px" height="15px"/>
+            </a>
+    </div>
+    <div id="search" width="100px" height="0px">
+        <div id="input">
+            Add a show:
+            <span>
+                <input type="text" class="add" size="12" />
+            </span>    
+        </div>
+        <div id="results">
+            <img id="spinner" src="{% static "img/spinner.gif" %}" />
+        </div>
+    </div>
+    <div id="shows">
+        <div class="show" id="recent" style="cursor: pointer;">
+            <table>
+            <tr>
+            <td>Recent Episodes</td>
+            </tr>
+            </table>
+        </div>
+        {% for show in shows %}
+        <div class="show{% if show.download %} download{% endif %}" id="s{{show.id}}" style="cursor: pointer;">
+            <table>
+            <tr>
+            <td>{{ show.name }}</td>
+            <td><a><div id="{{show.id}}" class="downloadToggle"/></a></td>
+            </tr>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div id="episodes_panel">
+    <div id="ep_content" />
+</div>

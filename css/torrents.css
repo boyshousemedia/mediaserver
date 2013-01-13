@@ -1,0 +1,33 @@
+.torrent{
+    width:758px;
+    height:20px;
+}
+.vip{
+    color:green;
+}
+.trusted{
+    color:purple;
+}
+#magnet{
+    width:500px;
+}
+
+/* Torrent template */
+.name{
+    width:300px;
+}
+.size{
+    width:50px;
+}
+.seeds{
+    width:20px;
+    color:#22ff22
+}
+.leeches{
+    width:20px;
+    color:#ff2222
+}
+.link{
+    width:20px;
+    height:20px;
+}

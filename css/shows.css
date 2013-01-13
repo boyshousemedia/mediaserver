@@ -1,0 +1,82 @@
+a{
+    cursor:pointer;
+}
+div#shows_panel{
+    float:left;
+    height:400px;
+    width:300px;
+}
+div#episodes_panel{
+    float:left;
+    margin-top:18px;
+    height:400px;
+    width:0px;
+    background-color:#996633;
+}
+
+div#shows{
+    max-height:350px;
+    overflow-y:scroll;
+}
+div.show{
+    background-color:#CFCFCF;
+    border-style:none none solid none;
+    border-color:#C4C4C4;
+    width:300px;
+    height:40px;
+    vertical-align:middle;
+}
+.show td{
+    width: 150px;
+}
+.show div{
+    width:32px;
+    height:32px;
+    background-size: 32px 32px;
+    background-image:url('/static/img/check_off.png');
+    margin-left:118px;
+}
+.download div{
+    background-image:url('/static/img/check.png');
+}
+
+/* Add Show Elements */
+div#search{
+    background-color:#339999;
+    width:300px;
+    height:0px;
+}
+div#results{
+    max-height:100px;
+    overflow-y:scroll;
+}
+
+div#input{
+    background-color:#44AAAA;
+}
+div#search input{
+    background-color:#fff;
+    border:solid;
+    border-width:1px;
+    width:100px;
+}
+img#searchToggle{
+    margin-right:5px;
+}
+
+form{
+    margin:0px;
+}
+
+
+.item, .show, .seasonButton{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.item:hover, .show:hover{
+    background-color:yellow;
+}

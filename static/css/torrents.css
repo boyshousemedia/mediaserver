@@ -1,0 +1,53 @@
+.torrent{
+    width:758px;
+    height:26px;
+}
+div.torrent:hover{
+    cursor:pointer;
+    background-color:yellow;
+}
+div.torrent.selected{
+    background-color:orange;
+}
+.torrent table{
+    width:758px;
+    height:20px;
+}
+.vip{
+    background-color:green;
+}
+.trusted{
+    background-color:purple;
+}
+#magnet{
+    width:500px;
+}
+
+/* Torrent template */
+.name{
+    width:500px;
+}
+.size{
+    width:146px;
+    text-align:center
+}
+.seeds{
+    width:20px;
+    color:#22ff22;
+    text-align:center
+}
+.leeches{
+    width:25px;
+    padding:0px 10px;
+    color:#ff2222;
+    text-align:center
+}
+.link{
+    width:20px;
+    height:20px;
+    padding-right:10px;
+}
+.link img{
+    width:20px;
+    height:20px;
+}

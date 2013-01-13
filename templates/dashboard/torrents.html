@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<head>
+    <link rel="stylesheet" href="{% static "css/torrents.css" %}" type="text/css" />
+</head>
+{% for torrent in torrents %}
+<div id="{{torrent.magnet}}" class="torrent{% if torrent.vip %} vip{% endif %}{% if torrent.trusted %} trusted{% endif %}">
+    <table class="torrent">
+    <tr>
+        <td class="name">{{torrent.name}}</td>
+        <td class="size">{{torrent.size}}</td>
+        <td class="seeds">{{torrent.seeds}}</td>
+        <td class="leeches">{{torrent.leeches}}</td>
+        <td class="link">
+            <a href="{{torrent.link}}" title="View the page for this torrent." target="_blank"><img src="{% static "img/browser.png" %}"></a>
+        </td>
+    </tr>
+    </table>
+</div>
+{% endfor %}
+{% ifequal torrents|length 0 %}
+No results found, check link for errors:
+<a href="{{url}}" target="_blank">{{url}}</a>
+<br>
+Download a magnet link:<input type="text" id="magnet">
+{% endifequal %}

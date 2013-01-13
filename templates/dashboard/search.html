@@ -1,0 +1,5 @@
+{% for show in shows %}
+<div class="item" style="cursor: pointer;" id="{{ show.seriesid }}" title="{{ show.overview }}">
+    {{ show.seriesname }}
+</div>
+{% endfor %}
