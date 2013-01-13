@@ -1,4 +1,4 @@
 mediaserver
 ===========
 
-Our media server
+Our media server.
