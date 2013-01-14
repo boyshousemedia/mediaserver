@@ -7,7 +7,7 @@ import math
 import os
 import fnmatch
 
-base_folder = "/Volumes/TV"
+base_folder = "C:/TV"
 
 class ServerTime(models.Model):
     time = models.IntegerField()
@@ -45,7 +45,6 @@ class Episode(models.Model):
             return
 
         name = re.sub('\([0-9]*\)', '', self.name)
-        print name
 
         for file in os.listdir(self.getDir()):
             if (fnmatch.fnmatch(file.lower(), '*' + name.strip().lower() + '*') |
@@ -160,18 +159,21 @@ class Show(models.Model):
 
     	#Add Series
     	series = dic['Series']
+    	temp_name = re.sub('\s*\([0-9]*\)', '', series['SeriesName'])
+    	temp_name = re.sub('&', 'and', temp_name)
+    	temp_name = re.sub(':', '', temp_name)
     	s = cls(id = series['id'],
-                name = series['SeriesName'],
+                name = temp_name,
                 air_day = cls.getField(series, 'Airs_DayOfWeek'),
                 air_time = cls.getField(series, 'Airs_Time'),
                 banner = "http://www.thetvdb.com/banners/" + cls.getField(series, 'banner'),
                 poster = "http://www.thetvdb.com/banners/" + cls.getField(series, 'poster'),
                 download = False,
-                search = series['SeriesName'] + " S{0s}E{0e}")
+                search = temp_name + " S{0s}E{0e}")
     	s.save()
-
-        if (not os.path.exists(base_folder + '/' + unicode(series['SeriesName']))):
-            os.mkdir(base_folder + '/' + unicode(series['SeriesName']))
+        
+        if (not os.path.exists(base_folder + '/' + unicode(temp_name))):
+            os.mkdir(base_folder + '/' + unicode(temp_name))
         
     	episodes = dic['Episode']
     	for episode in episodes:

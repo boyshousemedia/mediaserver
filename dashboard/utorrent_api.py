@@ -4,16 +4,15 @@ import base64
 import re
 import subprocess
 
-utorrent_loc = "/Applications/uTorrent.app/Contents/MacOS/uTorrent"
+utorrent_loc = "C:\Users\Administrator\Desktop\uTorrent.exe"
 
 DEBUG = False
 
 class UTorrentDL:
-    def __init__(self):
-        self.utorrent = utorrent_loc
 
     def get(self, link, dest):
-        subprocess.call([self.utorrent + ' /DIRECTORY "' + dest + '" "' + link + '"'])
+        print utorrent_loc + ' /DIRECTORY "' + dest + '" "' + link + '"'
+        subprocess.call([utorrent_loc, '/DIRECTORY', dest, link])
 
 class UTorrentConn:
     def __init__(self, host, user, passw):

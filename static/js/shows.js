@@ -113,11 +113,10 @@ $(document).ready(function(){
                    });
                              
                    seasons = [];
-                   var season = 1;
-                   while ($('#season' + season).length > 0){
-                    seasons[season] = $('#season' + season).html();
+		   var num_seasons = parseInt(document.getElementById("num_seasons").value);
+                   for(var season = 1; season < num_seasons+1; season++){
+                     seasons[season] = $('#season' + season).html();
                      $('#season' + season).remove();
-                     season++;
                    }
                    var cur_season = $('.defaultSeason').attr('id').substring(5);
                    $('#episodes').html(seasons[cur_season]);

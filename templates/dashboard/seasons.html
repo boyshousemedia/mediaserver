@@ -4,10 +4,12 @@
 <link rel="stylesheet" href="{% static "css/seasons.css" %}" type="text/css" />
 <script src="{% static "js/jquery-ui-1.9.2.custom.js" %}"></script>
 
+<input type="hidden" id="num_seasons" name="variable" value="{{ num_seasons }}">
+
 <form>
     <div id="background" style="background-image:url('{{show.banner}}');">
     <div id="radio">
-    {% for i in num_seasons %}
+    {% for i in seasons %}
         {% if i == season %}
         <input type="radio" id="radio{{i}}" name="radio" checked="checked" class="seasonButton defaultSeason"/><label for="radio{{i}}">Season {{i}}</label>
         {% else %}
@@ -41,10 +43,12 @@ Press enter to save."></td>
 </div>
 <div id="dummy">
 {% for ep in episodes %}
+
 {% if ep.number == 1 %}
 </div>
 <div id="season{{ep.season}}">
 {% endif %}
+
 <div class="episode" id="{{ ep.id }}" title="{{ ep.overview }}">
     <table>
     <tr>

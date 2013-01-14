@@ -98,7 +98,8 @@ def seasons(request):
     return render_to_response('dashboard/seasons.html', {'episodes' : episodes, 
                                                         'season' : season,
                                                         'show' : show,
-                                                        'num_seasons' : map(lambda x:x+1, range(num_seasons))})
+                                                        'seasons' : map(lambda x:x+1, range(num_seasons)),
+                                                        'num_seasons' : num_seasons})
 
 def recent(request):
     class DayShows:
