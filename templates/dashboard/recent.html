@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="{% static "css/seasons.css" %}" type="text/css" />
 </head>
-<div id="episodes" style="height:400px">
+
 <div id="recentTitle">This Week's Shows</div>
 {% for day in days %}
     <div class="dateHeader"> {{day.day|date:"l F d, Y"}}</div>
@@ -45,4 +45,3 @@
     {% endfor %}
 
 {% endfor %}
-</div>

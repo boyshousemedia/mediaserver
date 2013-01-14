@@ -106,6 +106,9 @@ def recent(request):
         def __init__(self):
             self.eps = []
 
+        def __str__(self):
+            return str(self.day) + "\n" + str(self.eps)
+
         def add(self, ep):
             self.day = ep.air_date
             self.eps.append(ep)
@@ -121,7 +124,11 @@ def recent(request):
             if dayShows != None:
                 days.append(dayShows)
             dayShows = DayShows()
+            day = ep.air_date.weekday()
         dayShows.add(ep)
+
+    for day in days:
+        print day
 
     # Grab last dayshow
     if (not dayShows == None):

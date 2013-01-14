@@ -76,7 +76,7 @@ span.epDownload img{
     border-color:black;
 }
 div#episodes{
-    height:260px;
+    height:360px;
     overflow-y:scroll;
 }
 div.pbSearch{
