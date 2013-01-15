@@ -1,15 +1,17 @@
 from django.db import models
 from tvdb_api import TVDBConn
-from utorrent_api import UTorrentDL
+from utorrent_api import UTorrentDL, UTorrentConn, TorrentInfo
 from pb import PBSearch, PBResult
 import re
 import math
 import os
 import fnmatch
+import operator
 
 base_folder = "C:/TV"
 
 class ServerTime(models.Model):
+    id = models.IntegerField(primary_key=True)
     time = models.IntegerField()
 
 class Episode(models.Model):
@@ -24,12 +26,13 @@ class Episode(models.Model):
     path = models.CharField(max_length=100, blank=True)
     image = models.CharField(max_length=100)
     downloading = models.BooleanField()
+    dl_hash = models.CharField(max_length=100)
 
     def getDir(self):
         return base_folder + '/' + self.show_name + '/Season ' + str(self.season)
 
     def getFileName(self):
-        return 'S' + ("%02d" % int(self.season)) + 'E' + ("%02d" % int(self.number)) + ' - ' + self.name + '(' + self.air_date.strftime("%m-%d-%Y") +')'
+        return 'S' + ("%02d" % int(self.season)) + 'E' + ("%02d" % int(self.number)) + ' - ' + self.name + ' (' + self.air_date.strftime("%m-%d-%Y") +')'
 
     def download(self, link):
         if (not os.path.exists(self.getDir())):
@@ -37,7 +40,47 @@ class Episode(models.Model):
 
         dl = UTorrentDL()
         dl.get(link, self.getDir())
-        self.downloading = True
+
+        request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
+        torrent = request.getnewest()
+        if torrent != None:
+            if os.path.abspath(torrent.dir) == os.path.abspath(self.getDir()):
+                request.setprop("label", str(self.id), torrent.hash)
+
+                self.dl_hash = torrent.hash
+                self.downloading = True
+                self.save()
+
+    def cleanup(self):
+        request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
+        request.stop(self.dl_hash)
+        self.downloading = False
+        self.path = 'pending'
+        self.save()
+
+    def rename(self):
+        request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
+        torr = request.getbyhash(self.dl_hash)
+        if torr == None:
+            return
+
+        filename = request.getfilename(self.dl_hash)
+        dir = os.path.abspath(torr.dir)
+        (root, ext) = os.path.splitext(filename)
+        
+        request.remove(self.dl_hash)
+        print dir + '/' + filename
+        os.rename(dir + '/' + filename, self.getDir() + '/' + self.getFileName() + ext)
+        self.path = self.getDir() + '/' + self.getFileName() + ext
+
+        #If in dir (e.g. dir exists in "Season" folder), remove dir
+        for file in os.listdir(self.getDir()):
+            if os.path.isdir(self.getDir() + '/' + file):
+                for file in os.listdir(dir):
+                    os.remove(dir + '/' + file)
+                os.rmdir(dir)
+
+        self.dl_hash = ''
         self.save()
 
     def checkForExistingFile(self):
@@ -73,6 +116,9 @@ class Episode(models.Model):
         search = re.sub('{0s}', "%02d" % self.season, search)
         search = re.sub('{0e}', "%02d" % self.number, search)
         search = re.sub('{n}', self.name, search)
+
+        plus_one = self.number + 1
+        search = re.sub('{0e\+1}', "%02d" % plus_one, search)
 
         avNum = "%02d" % (math.ceil(self.number/2.0))
         if(self.number % 2 != 0):
@@ -116,6 +162,7 @@ class Episode(models.Model):
                 path = '',
                 image = "http://www.thetvdb.com/banners/" + cls.getField(episode, 'filename',),
                 downloading = False,
+                dl_hash = '',
 
                 # use episode.get() to allow None for DateField
                 air_date = episode.get('FirstAired'))
@@ -132,10 +179,10 @@ class Show(models.Model):
     download = models.BooleanField()
     search = models.CharField(max_length=100)
 
+    #TODO - Note: Name not changed to avoid folder name mismatch
     def update(self):
         tvdb = TVDBConn()
         series = tvdb.getseriesbyid(self.id)
-        self.name = series['SeriesName']
         self.air_day = Show.getField(series, 'Airs_DayOfWeek')
         self.air_time = Show.getField(series, 'Airs_Time')
         self.banner = "http://www.thetvdb.com/banners/" + Show.getField(series, 'banner')

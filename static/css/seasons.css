@@ -50,7 +50,7 @@ span.epIMG img{
 }
 span.epName{
     height:55px;
-    width:380px;
+    width:550px;
     display:table;
     padding:10px;
     float:left;
@@ -65,7 +65,7 @@ p.air_date{
 span.epDownload{
     height:50px;
     width:50px;
-    margin-left: 160px;
+    margin-left: 30px;
 }
 span.epDownload img{
     height:40px;

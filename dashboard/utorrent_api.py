@@ -3,16 +3,34 @@ import urllib
 import base64
 import re
 import subprocess
+import json
 
 utorrent_loc = "C:\Users\Administrator\Desktop\uTorrent.exe"
 
 DEBUG = False
 
 class UTorrentDL:
-
     def get(self, link, dest):
         print utorrent_loc + ' /DIRECTORY "' + dest + '" "' + link + '"'
         subprocess.call([utorrent_loc, '/DIRECTORY', dest, link])
+
+class TorrentInfo:
+    def __init__(self, data):
+        self.hash = data[0]
+        self.status = data[1]
+        self.name = data[2]
+        self.size = data[3]
+        self.percent = data[4]
+        self.downloaded = data[5]
+        self.uploaded = data[6]
+        self.up_speed = data[8]
+        self.down_speed = data[9]
+        self.eta = data[10]
+        self.label = data[11]
+        self.peers = data[12]
+        self.seeds = data[14]
+        self.remaining = data[18]
+        self.dir = data[26]
 
 class UTorrentConn:
     def __init__(self, host, user, passw):
@@ -62,6 +80,55 @@ class UTorrentConn:
     def getprops(self, hashid):
         response = self.makerequest("/gui/?action=getprops&hash=" + hashid)
         return response.read()
+
+    def setprop(self, prop, value, hashid):
+        response = self.makerequest("/gui/?action=setprops&hash=" + hashid + "&s=" + prop + "&v=" + value)
+        return response.read()
+
+    def getbyhash(self, hashid):
+        data = json.loads(self.list())['torrents']
+        if data != []:
+            for bit in data:
+                torr = TorrentInfo(bit)
+                if torr.hash == hashid:
+                    return torr
+            return None
+        else:
+            return None
+
+    def getfilename(self, hashid):
+        response = self.makerequest("/gui/?action=getfiles&hash=" + hashid)
+        data = json.loads(response.read())['files'][1]
+        size = 0
+        filename = ''
+
+        print data
+
+        for bit in data:
+            if bit[1] > size:
+                size = bit[1]
+                filename = bit[0]
+        return filename
+
+    def getnewest(self):
+        data = json.loads(self.list())['torrents']
+        if data != []:
+            for bit in data:
+                torr = TorrentInfo(bit)
+                if torr.label == '':
+                    return torr
+            return None
+        else:
+            return None
+
+    def stop(self, hashid):
+        response = self.makerequest("/gui/?action=stop&hash=" + hashid)
+        return response.read()
+
+    def remove(self, hashid):
+        response = self.makerequest("/gui/?action=remove&hash=" + hashid)
+        return response.read()
+
 
 if (DEBUG):
     request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")

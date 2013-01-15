@@ -73,7 +73,10 @@ $(document).ready(function(){
         if($(this).hasClass('selected')){
             if (confirm("Download " + $(this).find('.name').html() +"?")){
                 $.get("download", {id: id, link: link}, function(data){
-                    location.reload(true);
+                    //TODO - close pbSearch and change icon
+                    //location.reload(true);
+                    $('.pbSearch').animate({height: '0px'}, 200);   
+                    $('.pbSearch').html('');   
                 });
             }
         }
@@ -113,10 +116,11 @@ $(document).ready(function(){
                    });
                              
                    seasons = [];
-		   var num_seasons = parseInt(document.getElementById("num_seasons").value);
-                   for(var season = 1; season < num_seasons+1; season++){
-                     seasons[season] = $('#season' + season).html();
+                   var season = 1;
+                   while ($('#season' + season).length > 0){
+                    seasons[season] = $('#season' + season).html();
                      $('#season' + season).remove();
+                     season++;
                    }
                    var cur_season = $('.defaultSeason').attr('id').substring(5);
                    $('#episodes').html(seasons[cur_season]);

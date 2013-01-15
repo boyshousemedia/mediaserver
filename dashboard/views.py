@@ -55,23 +55,6 @@ def add(request):
     Show.create(show_id)
     return HttpResponse()
 
-def update():
-    serverTime = ServerTime.objects.get(pk=1)
-    time = serverTime.time
-
-    tvdb = TVDBConn()
-    for series in tvdb.getseriesupdates(time):
-        if(Show.objects.filter(id=series).count() > 0):
-            s = Show.objects.get(id=series)
-            s.update()
-    for episode in tvdb.getepisodeupdates(time):
-        if(Episode.objects.filter(id=episode).count() > 0):
-            e = Episode.objects.get(id=episode)
-            e.update()
-
-    serverTime.time = tvdb.gettime()
-    serverTime.save()
-
 def setsearch(request):
     show_id = request.GET.get('id')
     search = request.GET.get('search')
@@ -126,9 +109,6 @@ def recent(request):
             dayShows = DayShows()
             day = ep.air_date.weekday()
         dayShows.add(ep)
-
-    for day in days:
-        print day
 
     # Grab last dayshow
     if (not dayShows == None):
