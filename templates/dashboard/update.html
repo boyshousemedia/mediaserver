@@ -1,0 +1,20 @@
+{% if not torrs %}
+No active torrents.
+{% else %}
+{% for torr in torrs %}
+<div class="torrentbg">
+    <div class="green" style="width:{{torr.percent}}px;"></div>
+    
+    <div class="torrent">
+        <table>
+            <tr>
+                <td class="name">{{torr.name}}</td>
+                <td class="percent">({{torr.percent_str}}%)</td>
+                <td class="seeds">{{torr.seeds}}({{torr.peers}})</td>
+                <td class="down">{{torr.down_speed_str}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endfor %}
+{% endif %}

@@ -6,13 +6,30 @@ from django.db.models import Q
 from django.db.models import Max
 
 from tvdb_api import TVDBConn
+from utorrent_api import UTorrentConn
 
 def index(request):
     return render_to_response('dashboard/index.html')
 
+def utorrent(request):
+    utorr = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
+    torrs = utorr.gettorrs()
+    return render_to_response('dashboard/utorrent.html', {'torrs' : torrs})
+
+def update(request):
+    utorr = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
+    torrs = utorr.gettorrs()
+    return render_to_response('dashboard/update.html', {'torrs' : torrs})
+
 def shows(request):
     shows = Show.objects.all().order_by('name')
     return render_to_response('dashboard/shows.html', {'shows' : shows})
+
+def remove(request):
+    show_id = request.GET.get('id')
+    show = Show.objects.get(id=show_id)
+    show.remove()
+    return HttpResponse()
 
 def downloadtoggle(request):
     show_id = request.GET.get('id')

@@ -72,7 +72,7 @@ Press enter to save."></td>
             <p class="air_date">Airs: {{ep.air_date}}</p>
             {% endif %}
         {% else %}
-            <p class="air_date">{{ep.path}}</p>
+            <a class="air_date" href="{% static ep.path|slice:"3:"  %}">{{ ep.path }}</a>
         {% endif %}
     </span>
     </td>
@@ -83,7 +83,9 @@ Press enter to save."></td>
             <img src="{% static "img/the_pirate_bay_logo.jpg" %}">
         </a>
         {% else %}
-        <img src="{% static "img/Checkmark.png" %}">
+        <a style="cursor:pointer;">
+            <img src="{% static "img/Checkmark.png" %}">
+        </a>
         {% endif %}
     </span>
     </td>

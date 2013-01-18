@@ -7,6 +7,7 @@ import math
 import os
 import fnmatch
 import operator
+import shutil
 
 base_folder = "C:/TV"
 
@@ -38,6 +39,9 @@ class Episode(models.Model):
         if (not os.path.exists(self.getDir())):
             os.mkdir(self.getDir())
 
+        if (os.path.isfile(path)):
+            os.remove(path)
+
         dl = UTorrentDL()
         dl.get(link, self.getDir())
 
@@ -50,7 +54,7 @@ class Episode(models.Model):
                 self.dl_hash = torrent.hash
                 self.downloading = True
                 self.save()
-
+                    
     def cleanup(self):
         request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
         request.stop(self.dl_hash)
@@ -76,9 +80,7 @@ class Episode(models.Model):
         #If in dir (e.g. dir exists in "Season" folder), remove dir
         for file in os.listdir(self.getDir()):
             if os.path.isdir(self.getDir() + '/' + file):
-                for file in os.listdir(dir):
-                    os.remove(dir + '/' + file)
-                os.rmdir(dir)
+                shutil.rmtree(self.getDir() + '/' + file)
 
         self.dl_hash = ''
         self.save()
@@ -188,6 +190,12 @@ class Show(models.Model):
         self.banner = "http://www.thetvdb.com/banners/" + Show.getField(series, 'banner')
         self.poster = "http://www.thetvdb.com/banners/" + Show.getField(series, 'poster')
         self.save()
+
+    def remove(self):
+        eps = Episode.objects.filter(show_id=self.id)
+        for ep in eps:
+            ep.delete()
+        self.delete()
 
     #Get method for xmltodict obj that handles None
     #as an empty string

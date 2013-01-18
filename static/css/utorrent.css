@@ -1,0 +1,61 @@
+#background{
+    background-color: #DDDDDD;
+    height: 200px;
+    width: 1000px;
+    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.torrentbg{
+    position: relative;
+    height: 30px;
+    width: 1000px;
+}
+.torrent{
+    position: absolute;
+    width: 1000px;
+}
+.green{
+    position: absolute;
+    background-color: #22AA22;
+    height: 30px;
+}
+
+#refresh{
+    cursor: pointer;
+    padding: 5px;
+    border: solid;
+    width: 50px;
+    height: 20px;
+    margin-bottom: 10px;
+}
+.r_enabled{
+    background-color: #22AA22;
+}
+
+.torrent td{
+    padding: 5px;
+    font-size: small;
+}
+
+
+.name{
+    width:650px;
+}
+.percent{
+    font-weight: bold;
+    width: 50px;
+    text-align: right;
+}
+.seeds{
+    width: 150px;
+    text-align: right;
+}
+.down{
+    width: 150px;
+    text-align: right;
+}

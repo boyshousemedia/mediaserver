@@ -21,10 +21,12 @@ class TorrentInfo:
         self.name = data[2]
         self.size = data[3]
         self.percent = data[4]
+        self.percent_str = float(data[4]) / 10
         self.downloaded = data[5]
         self.uploaded = data[6]
         self.up_speed = data[8]
         self.down_speed = data[9]
+        self.down_speed_str = str(data[9] * 0.0009765625)[:6] + ' KBs/sec'
         self.eta = data[10]
         self.label = data[11]
         self.peers = data[12]
@@ -84,6 +86,15 @@ class UTorrentConn:
     def setprop(self, prop, value, hashid):
         response = self.makerequest("/gui/?action=setprops&hash=" + hashid + "&s=" + prop + "&v=" + value)
         return response.read()
+
+    def gettorrs(self):
+        data = json.loads(self.list())['torrents']
+        r = []
+        for bit in data:
+            torr = TorrentInfo(bit)
+            if torr.label != 'Colbert' and torr.label != 'DailyShow' and torr.label != 'Conan':
+                r.append(torr)
+        return r
 
     def getbyhash(self, hashid):
         data = json.loads(self.list())['torrents']

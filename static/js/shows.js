@@ -28,6 +28,18 @@ $(document).ready(function(){
     $('input.add').keypress(function(e) {
         if(e.which == 13){
             $('div#results').html(spinner);    
+
+            $.ajax({
+                url: "search",
+                data: {searchtext : $('input.add').val()},
+                success: function(data){
+                    $('div#results').html(data);
+                },
+                error: function(data){
+                    $('div#results').html('Sorry, there was an error');
+                }
+            });
+
             $.get("search", {searchtext : $('input.add').val()}, function(data){
                 $('div#results').html(data);    
             });
@@ -51,6 +63,7 @@ $(document).ready(function(){
                     alert(name + " already exists.");
                 }
                 else{
+                    $('#results').html(spinner);
                     $.get("add", {id : id}, function(data){
                         location.reload(true);    
                     });
