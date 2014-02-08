@@ -1,5 +1,7 @@
 .torrent{
-    width:758px;
+    position:static;
+    overflow: hidden;
+    width:100%;
     height:26px;
 }
 div.torrent:hover{
@@ -9,45 +11,34 @@ div.torrent:hover{
 div.torrent.selected{
     background-color:orange;
 }
-.torrent table{
-    width:758px;
-    height:20px;
-}
 .vip{
     background-color:green;
 }
 .trusted{
     background-color:purple;
 }
-#magnet{
-    width:500px;
-}
 
 /* Torrent template */
-.name{
-    width:500px;
+table.torrent{
+    table-layout: fixed;
+    width: 100%;
 }
-.size{
-    width:146px;
-    text-align:center
+table.torrent td{
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    padding: 0px 5px;
 }
 .seeds{
-    width:20px;
     color:#22ff22;
-    text-align:center
 }
 .leeches{
-    width:25px;
-    padding:0px 10px;
     color:#ff2222;
-    text-align:center
 }
-.link{
-    width:20px;
-    height:20px;
-    padding-right:10px;
-}
+
 .link img{
     width:20px;
     height:20px;
+    float:right;
 }

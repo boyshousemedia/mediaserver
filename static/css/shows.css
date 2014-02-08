@@ -26,6 +26,14 @@ div.show{
     height:40px;
     vertical-align:middle;
 }
+.showName{
+    white-space: nowrap;
+    overflow: hidden;
+    width: 260px;
+}
+.showRight{
+    width: 30px;
+}
 div#recent{
     background-color:#AAA;
 }
@@ -34,16 +42,19 @@ div#recent td{
     font-size:18;
     vertical-align:middle;
 }
-.show td{
-    width: 150px;
-}
-.show div{
-    width:32px;
-    height:32px;
-    background-size: 32px 32px;
+.downloadToggle{
+    width:22px;
+    height:22px;
+    background-size: 22px 22px;
     background-image:url('/static/img/check_off.png');
-    margin-left:118px;
+    margin-left:11px;
 }
+.delete{
+    width: 15px;
+    height: 15px;
+    margin-left: 10px;
+}
+
 .download div{
     background-image:url('/static/img/check.png');
 }
@@ -53,6 +64,7 @@ div#search{
     background-color:#339999;
     width:300px;
     height:0px;
+    display:none;
 }
 div#results{
     max-height:100px;

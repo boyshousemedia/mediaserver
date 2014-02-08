@@ -34,7 +34,7 @@ class PBResult():
     def checkLink(self, line):
         match = re.search('<a href="(/torrent[^"]*)', line)
         if (match != None):
-            self.link = "https://thepiratebay.se" + match.group(1)
+            self.link = "http://thepiratebay.se" + match.group(1)
 
     def checkMagnet(self, line):
         match = re.search('<a href="(magnet[^"]*)', line)
@@ -52,7 +52,7 @@ class PBResult():
             date_str = match.group(1).replace("&nbsp;", " ")
 
             # "mins" -> uploaded very recently
-            if(date_str.find("mins") != -1):
+            if(date_str.find("ago") != -1):
                 self.date = datetime.now()
             elif(date_str.find("Today") != -1):
                 my_datetime = datetime.strptime(date_str, "Today %H:%M")
@@ -96,9 +96,10 @@ class PBSearch():
     def makerequest(self, request):
         return urllib.urlopen(request)
 
+
     def getUrl(self, search):
         search = re.sub("\s", "%20", search)
-        return "https://thepiratebay.se/search/" + search + "/0/7/0"
+        return "http://thepiratebay.se/search/" + search + "/0/7/0"
 
     def searchFor(self, search):
         url = self.getUrl(search)

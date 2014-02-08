@@ -34,8 +34,13 @@
         <div class="show{% if show.download %} download{% endif %}" id="s{{show.id}}" style="cursor: pointer;">
             <table>
             <tr>
-            <td>{{ show.name }}</td>
-            <td><a><div id="{{show.id}}" class="downloadToggle"/></a></td>
+                <td><div class="showName">{{ show.name }}</div></td>
+                <td>
+                    <div class="showRight">
+                        <a><div id="{{show.id}}" class="downloadToggle"></div></a>
+                        <a><img id="{{show.id}}" title="{{show.name}}" src="{% static "img/bigX.png" %}" class="delete"></a>
+                    </div>    
+                </td>
             </tr>
             </table>
         </div>

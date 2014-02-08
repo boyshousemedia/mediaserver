@@ -21,6 +21,16 @@ class TVDBConn:
         dic = xmltodict.parse(response.read())
         return dic['Items']['Time']
 
+    def getupdates_day(self):
+        response = self.makerequest("/" + self.key + "/updates/updates_day.xml")
+        dic = xmltodict.parse(response.read())
+        return dic['Data']
+
+    def getupdates_week(self):
+        response = self.makerequest("/" + self.key + "/updates/updates_week.xml")
+        dic = xmltodict.parse(response.read())
+        return dic['Data']
+
     # Returns a list of series that have changed since the given time
     def getseriesupdates(self, time):
         response = self.makerequest("/Updates.php?type=series&time=" + str(time))

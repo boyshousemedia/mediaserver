@@ -20,7 +20,7 @@ class TorrentInfo:
         self.status = data[1]
         self.name = data[2]
         self.size = data[3]
-        self.percent = data[4]
+        self.percentpx = self.compute_percent_pixels(data[4])
         self.percent_str = float(data[4]) / 10
         self.downloaded = data[5]
         self.uploaded = data[6]
@@ -33,6 +33,10 @@ class TorrentInfo:
         self.seeds = data[14]
         self.remaining = data[18]
         self.dir = data[26]
+
+    def compute_percent_pixels(self, percent):
+        max_width = 525
+        return int(percent/1000. * max_width)
 
 class UTorrentConn:
     def __init__(self, host, user, passw):
@@ -108,12 +112,12 @@ class UTorrentConn:
             return None
 
     def getfilename(self, hashid):
-        response = self.makerequest("/gui/?action=getfiles&hash=" + hashid)
-        data = json.loads(response.read())['files'][1]
+        data = []
+        while (data == []):
+            response = self.makerequest("/gui/?action=getfiles&hash=" + hashid)
+            data = json.loads(response.read())['files'][1]
         size = 0
         filename = ''
-
-        print data
 
         for bit in data:
             if bit[1] > size:
@@ -134,6 +138,10 @@ class UTorrentConn:
 
     def stop(self, hashid):
         response = self.makerequest("/gui/?action=stop&hash=" + hashid)
+        return response.read()
+
+    def removedata(self, hashid):
+        response = self.makerequest("/gui/?action=removedata&hash=" + hashid)
         return response.read()
 
     def remove(self, hashid):

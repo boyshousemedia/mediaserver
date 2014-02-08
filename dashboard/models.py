@@ -9,7 +9,7 @@ import fnmatch
 import operator
 import shutil
 
-base_folder = "C:/TV"
+base_folder = "E:/TV"
 
 class ServerTime(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -30,30 +30,63 @@ class Episode(models.Model):
     dl_hash = models.CharField(max_length=100)
 
     def getDir(self):
-        return base_folder + '/' + self.show_name + '/Season ' + str(self.season)
+        show = self.show_name
+        show = re.sub('\.','',show)
+        return base_folder + '/' + show + '/Season ' + str(self.season)
 
-    def getFileName(self):
-        return 'S' + ("%02d" % int(self.season)) + 'E' + ("%02d" % int(self.number)) + ' - ' + self.name + ' (' + self.air_date.strftime("%m-%d-%Y") +')'
+    def getFileName(self, name=None):
+        if name is None:
+            name = self.name
+        name = re.sub(':', '', name)
+        name = re.sub('\?', '', name)
+        return 'S' + ("%02d" % int(self.season)) + 'E' + ("%02d" % int(self.number)) + ' - ' + name + ' (' + self.air_date.strftime("%m-%d-%Y") +')'
 
-    def download(self, link):
+    def download(self, link, name):
         if (not os.path.exists(self.getDir())):
             os.mkdir(self.getDir())
 
-        if (os.path.isfile(path)):
-            os.remove(path)
+        if (os.path.isfile(self.path)):
+            os.remove(self.path)
 
         dl = UTorrentDL()
         dl.get(link, self.getDir())
 
         request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
-        torrent = request.getnewest()
-        if torrent != None:
-            if os.path.abspath(torrent.dir) == os.path.abspath(self.getDir()):
-                request.setprop("label", str(self.id), torrent.hash)
+        torrents = request.gettorrs()
+        for torrent in torrents:
+            #print torrent.name
+            #print name
+            if torrent.name == name:
+                # Check if it is a .rar
+                error = True
+                while(error):
+                    try:
+                        filename = request.getfilename(torrent.hash)
+                    except:
+                        continue
+                    error = False
+                #print filename
+                #print 'hi'
+                ext = os.path.splitext(filename)[1]
+                #print ext
+                if ext == '.rar' or fnmatch.fnmatch(ext, '.r[0-9][0-9]'):
+                    request.removedata(torrent.hash)
+                    request.remove(torrent.hash)
+                    return False
+
+                error = True
+                while(error):
+                    try:
+                        request.setprop("label", str(self.id), torrent.hash)
+                    except:
+                        continue
+                    error = False
 
                 self.dl_hash = torrent.hash
                 self.downloading = True
                 self.save()
+                return True
+        print "Did not find torrent"
                     
     def cleanup(self):
         request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
@@ -66,22 +99,32 @@ class Episode(models.Model):
         request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
         torr = request.getbyhash(self.dl_hash)
         if torr == None:
+            print 'no hash ' + self.name
             return
 
         filename = request.getfilename(self.dl_hash)
         dir = os.path.abspath(torr.dir)
         (root, ext) = os.path.splitext(filename)
-        
+
+        try:
+            os.rename(dir + '\\' + filename, self.getDir() + '/' + self.getFileName() + ext)
+        except Exception as e:
+            print dir + '\\' + filename
+            print self.getDir() + '/' + self.getFileName() + ext
+            print e
+            return
         request.remove(self.dl_hash)
-        print dir + '/' + filename
-        os.rename(dir + '/' + filename, self.getDir() + '/' + self.getFileName() + ext)
         self.path = self.getDir() + '/' + self.getFileName() + ext
 
-        #If in dir (e.g. dir exists in "Season" folder), remove dir
+        # If in dir (e.g. dir exists in "Season" folder), remove dir
         for file in os.listdir(self.getDir()):
             if os.path.isdir(self.getDir() + '/' + file):
-                shutil.rmtree(self.getDir() + '/' + file)
+                try:
+                    shutil.rmtree(self.getDir() + '/' + file)
+                except:
+                    pass
 
+        
         self.dl_hash = ''
         self.save()
 
@@ -90,11 +133,13 @@ class Episode(models.Model):
             return
 
         name = re.sub('\([0-9]*\)', '', self.name)
-
+        print name
         for file in os.listdir(self.getDir()):
-            if (fnmatch.fnmatch(file.lower(), '*' + name.strip().lower() + '*') |
+            print file
+            if (fnmatch.fnmatch(file.lower(), '*' + name.strip().lower() + '*') or
                fnmatch.fnmatch(file, '*S' + ("%02d" % int(self.season)) + 'E' + ("%02d" % int(self.number)) + '*')):
                 self.path = self.getDir() + '/' + file
+                self.save()
     
     def getSearchUrl(self):
         pb = PBSearch()
@@ -131,15 +176,30 @@ class Episode(models.Model):
 
         return search
 
-    def update(self):
+    def renameIfNeeded(self, name):
+        if bool(self.path) and (self.name != name):
+            try:
+                _,ext = os.path.splitext(self.path)
+                path = self.getDir() + '/' + self.getFileName(name) + ext
+                os.rename(self.path, path)
+                self.path = path
+                print 'Renamed: ' + path
+            except Exception, e:
+                print "Couldn't rename: %s" % e
+                return
+        self.name = name
+
+    def update(self, dic=None):
         tvdb = TVDBConn()
-        dic = tvdb.getepisodebyid(self.id)
+        if dic is None:
+            dic = tvdb.getepisodebyid(self.id)
         self.season = dic['SeasonNumber']
         self.number = dic['EpisodeNumber']
-        self.name = Episode.getField(dic, 'EpisodeName','No Name on TVDB')
+        name = Episode.getField(dic, 'EpisodeName','No Name on TVDB')
+        self.renameIfNeeded(name)
+        self.air_date = dic.get('FirstAired')
         self.overview = Episode.getField(dic,'Overview','No overview available.')
         self.image = "http://www.thetvdb.com/banners/" + Episode.getField(dic, 'filename',)
-        self.air_date = dic.get('FirstAired')
         self.save()
 
     #Get method for xmltodict obj that handles None
@@ -150,6 +210,7 @@ class Episode(models.Model):
         if (result is None):
             return alternate
         else:
+            # emcode to protect against wiki assholes
             return result
 
     @classmethod
@@ -217,6 +278,7 @@ class Show(models.Model):
     	temp_name = re.sub('\s*\([0-9]*\)', '', series['SeriesName'])
     	temp_name = re.sub('&', 'and', temp_name)
     	temp_name = re.sub(':', '', temp_name)
+    	temp_name = re.sub('\.', '', temp_name)
     	s = cls(id = series['id'],
                 name = temp_name,
                 air_day = cls.getField(series, 'Airs_DayOfWeek'),

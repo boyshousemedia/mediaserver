@@ -3,29 +3,53 @@
 <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
 <script type="text/javascript" src="{% static "js/utorrent.js" %}"></script>
 
-{% if not torrs %}
-<div id="refresh">Refresh</div>
-<div id="background">
-No active torrents
-{% else %}
-<div id="refresh" class="r_enabled">Refresh</div>
-<div id="background">
-{% endif %}
+<table>
+<tr>
+<td>
+<div id="utorrent">
+    {% if not torrs %}
+    <div id="refresh">Refresh</div>
+    <div id="background">
+    No active torrents
+    {% else %}
+    <div id="refresh" class="r_enabled">Refresh</div>
+    <div id="background">
+    {% endif %}
 
-{% for torr in torrs %}
-<div class="torrentbg">
-    <div class="green" style="width:{{torr.percent}}px;"></div>
+        {% for torr in torrs %}
+        <div class="torrentbg">
+            <div class="green" style="width:{{torr.percentpx}}px;"></div>
     
-    <div class="torrent">
-        <table>
-            <tr>
-                <td class="name">{{torr.name}}</td>
-                <td class="percent">({{torr.percent_str}}%)</td>
-                <td class="seeds">{{torr.seeds}}({{torr.peers}})</td>
-                <td class="down">{{torr.down_speed_str}}</td>
-            </tr>
-        </table>
+            <div class="u_torrent">
+                <table>
+                    <col width="55%"/>
+                    <col width="12%"/>
+                    <col width="10%"/>
+                    <col width="23%"/>
+                    <tr>
+                        <td class="torr_name">{{torr.name}}</td>
+                        <td class="percent">({{torr.percent_str}}%)</td>
+                        <td class="seed_leech">{{torr.seeds}}({{torr.peers}})</td>
+                        <td class="down">{{torr.down_speed_str}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+
     </div>
 </div>
-{% endfor %}
+</td>
+<td>
+<div id="search">
+    <div id="searchInput">
+        <form>
+        <input type="text" size="12" value="Enter search here..." >
+        </form>
+    </div>
+    <div id="searchResults">
+    </div>
 </div>
+</td>
+</tr>
+</table>

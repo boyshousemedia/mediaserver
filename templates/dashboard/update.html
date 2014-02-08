@@ -3,14 +3,18 @@ No active torrents.
 {% else %}
 {% for torr in torrs %}
 <div class="torrentbg">
-    <div class="green" style="width:{{torr.percent}}px;"></div>
+    <div class="green" style="width:{{torr.percentpx}}px;"></div>
     
-    <div class="torrent">
+    <div class="u_torrent">
         <table>
+            <col width="55%"/>
+            <col width="12%"/>
+            <col width="10%"/>
+            <col width="23%"/>
             <tr>
-                <td class="name">{{torr.name}}</td>
+                <td class="torr_name">{{torr.name}}</td>
                 <td class="percent">({{torr.percent_str}}%)</td>
-                <td class="seeds">{{torr.seeds}}({{torr.peers}})</td>
+                <td class="seed_leech">{{torr.seeds}}({{torr.peers}})</td>
                 <td class="down">{{torr.down_speed_str}}</td>
             </tr>
         </table>

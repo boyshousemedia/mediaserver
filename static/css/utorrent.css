@@ -1,23 +1,21 @@
 #background{
     background-color: #DDDDDD;
-    height: 200px;
-    width: 1000px;
-    
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    height: 300px;
+    width: 525px;
+}
+#search{
+    background-color: #D2B9A6;
+    width: 525px;
+    height: 345px;
 }
 .torrentbg{
     position: relative;
     height: 30px;
-    width: 1000px;
+    width: 525px;
 }
-.torrent{
+.u_torrent{
     position: absolute;
-    width: 1000px;
+    width: 525px;
 }
 .green{
     position: absolute;
@@ -37,25 +35,62 @@
     background-color: #22AA22;
 }
 
-.torrent td{
+.u_torrent table{
+    table-layout: fixed;
+    width: 525px;
+}
+.u_torrent td{
     padding: 5px;
+    font-size: small;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    text-align: left;
+}
+
+#background .percent{
+    font-weight: bold;
+}
+
+//Pirate Bay Search CSS Rules
+#searchInput{
+    width: 100%;
+    height: 20px;
+    border: solid solid;
+    border-width: 1px;
+    border-color: #000000;
+}
+#searchInput input{
+    width: 500px;
+    height: 25px;
+    margin-left: 10px;
+    margin-top: 5px;
+    outline-width: 0px;
+    font-size: medium;
+}
+#searchInput img{
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+#searchResults{
+    margin:10px;
+    height:130px;
+    width:500px;
+    background: #F6F1EE;
+    overflow: scroll;
+    font-size: x-large;
+    text-align: center;
+}
+#searchResults td{
     font-size: small;
 }
 
-
-.name{
-    width:650px;
-}
-.percent{
-    font-weight: bold;
-    width: 50px;
-    text-align: right;
-}
-.seeds{
-    width: 150px;
-    text-align: right;
-}
-.down{
-    width: 150px;
-    text-align: right;
+#background, #refresh, #searchResults{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

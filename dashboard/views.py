@@ -6,7 +6,11 @@ from django.db.models import Q
 from django.db.models import Max
 
 from tvdb_api import TVDBConn
-from utorrent_api import UTorrentConn
+from utorrent_api import UTorrentConn, UTorrentDL
+from pb import PBSearch
+
+dump_dir = "E:/Dump"
+
 
 def index(request):
     return render_to_response('dashboard/index.html')
@@ -19,7 +23,7 @@ def utorrent(request):
 def update(request):
     utorr = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
     torrs = utorr.gettorrs()
-    return render_to_response('dashboard/update.html', {'torrs' : torrs})
+    return render_to_response('dashboard/update.html', {'torrs' : torrs[:4]})
 
 def shows(request):
     shows = Show.objects.all().order_by('name')
@@ -37,6 +41,13 @@ def downloadtoggle(request):
     show.toggleDownload()
     show.save()
     return HttpResponse()
+
+def delete(request):
+    show_id = request.GET.get('id')
+    show = Show.objects.get(id=show_id)
+    show.remove()
+    return HttpResponse()
+
 
 def search(request):
 
@@ -58,14 +69,38 @@ def gettorrents(request):
     ep = Episode.objects.get(id=ep_id)
     url = ep.getSearchUrl()
     torrents = ep.gettorrents()[:5]
-    return render_to_response('dashboard/torrents.html', {'torrents' : torrents, 'url' : url})
+    return render_to_response('dashboard/torrents.html', {'torrents' : torrents, 'url' : url, 'epSearch' : True})
+
+def torrentsearch(request):
+    search = request.GET.get('search')
+    pb = PBSearch()
+    url = pb.getUrl(search)
+    torrents = pb.searchFor(search)
+    return render_to_response('dashboard/torrents.html', {'torrents' : torrents, 'url' : url, 'epSearch' : False})
 
 def download(request):
     ep_id = request.GET.get('id')
     link = request.GET.get('link')
+    name = request.GET.get('name')
     ep = Episode.objects.get(id=ep_id)
-    ep.download(link)
+    if ep.download(link, name):
+        return HttpResponse()
+    else:
+        return HttpResponse(status=500)
+
+def download_any(request):
+    link = request.GET.get('link')
+    name = request.GET.get('name')
+    dl = UTorrentDL()
+    dl.get(link, dump_dir)
+
+    request = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
+    torrents = request.gettorrs()
+    for torrent in torrents:
+        if torrent.name == name:
+            request.setprop("label", "Dump-" + torrent.hash, torrent.hash)    
     return HttpResponse()
+    
 
 def add(request):
     show_id = request.GET.get('id')
@@ -114,7 +149,7 @@ def recent(request):
             self.eps.append(ep)
     
     week_ago = datetime.now() - timedelta(weeks=1)
-    eps = Episode.objects.filter(air_date__gt=week_ago).filter(air_date__lt=datetime.now()).order_by('-air_date')
+    eps = Episode.objects.filter(air_date__gt=week_ago).filter(air_date__lte=datetime.now()).order_by('-air_date')
     
     days = []
     dayShows = None
