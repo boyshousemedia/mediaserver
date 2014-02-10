@@ -30,4 +30,7 @@ urlpatterns = patterns('',
      url(r'^dashboard/utorrent/update$', 'dashboard.views.update'),
      url(r'^dashboard/utorrent/torrentsearch$', 'dashboard.views.torrentsearch'),
      url(r'^dashboard/utorrent/download_any$', 'dashboard.views.download_any'),
+
+
+     url(r'^disk/', include('disk.urls')),
 )
