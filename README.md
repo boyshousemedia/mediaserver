@@ -1,8 +1,13 @@
 mediaserver
 ===========
 
-Our media server.
+The [Toadmansion's](http://toadmansion.com) media management application.
 
+Features
+
+* Integrated UI for browsing TVDB and local files
+* Download new content from Pirate Bay torrents
+* Monitor disk usage
 
 # Developer Setup
 
@@ -36,3 +41,6 @@ Add some disks to monitor
 Go to /admin to access the Django admin and add a new disk model.
 Set the name to '/' or whatever mount point you want. Set the numeric values to 1.
 hit /disk/update to update the models and get a json representation of how full your disks are.
+
+Install uTorrent. Enable the web UI in the settings. Set the login credentials and put them in
+your developer django settings file.
