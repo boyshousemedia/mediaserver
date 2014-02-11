@@ -1,4 +1,5 @@
 # Django settings for mediaserver project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -8,14 +9,15 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
+mysql_user = os.environ['mysql_user']
+mysql_password = os.environ['mysql_password']
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/Users/burt/shows.db',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'mediaserver',                      # Or path to database file if using sqlite3.
+        'USER': mysql_user,                      # Not used with sqlite3.
+        'PASSWORD': mysql_password,                  # Not used with sqlite3.
+        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
