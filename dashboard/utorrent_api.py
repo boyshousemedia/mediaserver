@@ -5,6 +5,7 @@ import re
 import subprocess
 import json
 
+#TODO move to settings
 utorrent_loc = "C:\Users\Administrator\Desktop\uTorrent.exe"
 
 DEBUG = False
@@ -91,6 +92,7 @@ class UTorrentConn:
         response = self.makerequest("/gui/?action=setprops&hash=" + hashid + "&s=" + prop + "&v=" + value)
         return response.read()
 
+    # for utorrent dashboard, exclude automatically downloaded shows (label = Colbert/DailyShow/Conan)
     def gettorrs(self):
         data = json.loads(self.list())['torrents']
         r = []
@@ -146,6 +148,10 @@ class UTorrentConn:
 
     def remove(self, hashid):
         response = self.makerequest("/gui/?action=remove&hash=" + hashid)
+        return response.read()
+
+    def addurl(self, url):
+        response = self.makerequest("/gui/?action=add-url&s=" + url)
         return response.read()
 
 
