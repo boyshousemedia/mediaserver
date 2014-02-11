@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from datetime import datetime, timedelta
 from django.db.models import Q
 from django.db.models import Max
+import settings
 
 from tvdb_api import TVDBConn
 from utorrent_api import UTorrentConn, UTorrentDL
@@ -16,7 +17,8 @@ def index(request):
     return render_to_response('dashboard/index.html')
 
 def utorrent(request):
-    utorr = UTorrentConn("127.0.0.1:2219", "Boyshouse", "nickc")
+    utorr = UTorrentConn(settings.utorrent_host, settings.utorrent_user,
+                         settings.utorrent_password)
     torrs = utorr.gettorrs()
     return render_to_response('dashboard/utorrent.html', {'torrs' : torrs})
 
