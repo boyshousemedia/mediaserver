@@ -30,3 +30,9 @@ Set up the database
 
     manage.py syncdb
     manage.py migrate
+
+Add some disks to monitor
+
+Go to /admin to access the Django admin and add a new disk model.
+Set the name to '/' or whatever mount point you want. Set the numeric values to 1.
+hit /disk/update to update the models and get a json representation of how full your disks are.
