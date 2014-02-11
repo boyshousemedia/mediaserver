@@ -153,3 +153,8 @@ LOGGING = {
         },
     }
 }
+
+
+utorrent_host = '127.0.0.1:8080'
+utorrent_user = 'admin'
+utorrent_password = ''
