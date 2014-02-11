@@ -23,3 +23,10 @@ To do this, edit `~/.virtualenvs/mediaserver/bin/activate` and add lines like th
     export DJANGO_SETTINGS_MODULE=mediaserver.settings_nickc
     export mysql_user=root
     export mysql_password=blah
+
+Create a database.
+
+Set up the database
+
+    manage.py syncdb
+    manage.py migrate
